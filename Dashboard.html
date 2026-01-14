@@ -1,0 +1,2334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bireena Medico - Pro Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-green: #10b981;
+      --primary-green-dark: #059669;
+      --primary-green-light: #34d399;
+      --secondary-blue: #3b82f6;
+      --secondary-blue-dark: #2563eb;
+      --text-dark: #1e293b;
+      --text-gray: #64748b;
+      --text-light: #94a3b8;
+      --bg-white: #ffffff;
+      --bg-light: #f8fafc;
+      --bg-green-light: #ecfdf5;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-white);
+      color: var(--text-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ============ SIDEBAR ============ */
+    .sidebar {
+      background: linear-gradient(180deg, #020617 0%, #020617 40%, #0b1120 100%);
+      color: #e5e7eb;
+      width: 240px;
+      min-width: 240px;
+      transition: width 0.25s ease, min-width 0.25s ease;
+      border-right: 1px solid rgba(148, 163, 184, 0.2);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 16px 12px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .sidebar.collapsed { width: 72px; min-width: 72px; }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px 14px;
+      border-radius: 10px;
+      background: radial-gradient(circle at top left, #1f2937 0, transparent 55%);
+      margin-bottom: 20px;
+    }
+
+    .sidebar-close-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: #e5e7eb;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .sidebar-close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.1);
+    }
+
+    .logo-image {
+      margin-left: 10px;
+      margin-top:5px;
+      height: 40px;
+      width: 150px;
+      background-image: url(/assets/banner.jpeg);
+      background-size: cover;
+    }
+
+    .sidebar.collapsed .logo-text,
+    .sidebar.collapsed .menu-text,
+    .sidebar.collapsed .menu-label { display: none; }
+
+    .menu-label {
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: #9ca3af;
+      margin: 16px 8px 6px;
+    }
+
+    .sidebar-menu { margin-top: 10px; }
+
+    .menu-item {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #e5e7eb;
+      padding: 9px 10px;
+      margin: 4px 0;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+    }
+
+    .menu-item .menu-icon { width: 22px; text-align: center; font-size: 15px; }
+    .menu-item:hover { background: #15192b; transform: translateX(2px); }
+    .menu-item.active {
+      background: rgba(79, 70, 229, 0.2);
+      color: #e0e7ff;
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.5);
+    }
+
+    /* ============ MAIN ============ */
+    .main {
+      flex: 1;
+      background: var(--bg-green-light);
+      padding: 18px 22px;
+      min-width: 0;
+      overflow-y: auto;
+    }
+
+    /* ============ TOPBAR ============ */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .topbar-title { 
+      font-size: 20px; 
+      font-weight: 600; 
+      color: var(--text-dark); 
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .toggle-btn {
+      border: none;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      border-radius: 50%;
+      padding: 0;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: visible;
+      flex-shrink: 0;
+    }
+
+    .toggle-btn .sym-icon {
+      width: 24px;
+      height: 18px;
+      position: relative;
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar:not(.collapsed) ~ .main .toggle-btn .sym-icon::before,
+    .sidebar:not(.collapsed) ~ .main .toggle-btn .sym-icon::after {
+      content: '';
+      flex: 1;
+      height: 100%;
+      background-color: #1e293b;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar.collapsed ~ .main .toggle-btn .sym-icon {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%231e293b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .sidebar.collapsed ~ .main .toggle-btn .sym-icon::before,
+    .sidebar.collapsed ~ .main .toggle-btn .sym-icon::after {
+      content: none !important;
+    }
+
+    .toggle-btn:hover .sym-icon::before,
+    .toggle-btn:hover .sym-icon::after {
+      background-color: var(--primary-green);
+    }
+
+    .toggle-btn:hover {
+      border-color: var(--primary-green-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .toggle-btn .sym-icon { display: none; }
+      .toggle-btn::before {
+        content: '☰';
+        font-size: 20px;
+        color: #1e293b;
+      }
+      .sidebar.active ~ .main .toggle-btn::before { content: '✕'; }
+      .toggle-btn::after { display: none !important; }
+    }
+
+    .toggle-btn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .toggle-btn:hover::after {
+      opacity: 1;
+      visibility: visible;
+      bottom: -42px;
+    }
+
+    /* Search Bar */
+    .search-container {
+      position: relative;
+      flex: 1;
+      max-width: 300px;
+      min-width: 150px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      border: 2px solid var(--border-color);
+      background: var(--bg-white);
+      color: var(--text-dark);
+      border-radius: 8px;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-green);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .topbar-right {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .notification-bell {
+      position: relative;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: all 0.2s;
+      font-size: 18px;
+    }
+
+    .notification-bell:hover {
+      background: var(--bg-green-light);
+      transform: scale(1.05);
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+      animation: pulse-notif 2s infinite;
+    }
+
+    @keyframes pulse-notif {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* ============ NOTIFICATIONS CARD ============ */
+    .notifications-card {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 380px;
+      max-width: calc(100vw - 20px);
+      background: var(--bg-white);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      margin-top: 12px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px) scale(0.95);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 500;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .notifications-card.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    .notifications-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+      border-radius: 12px 12px 0 0;
+    }
+
+    .notifications-header h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      font-family: "Poppins", sans-serif;
+    }
+
+    .notifications-header .close-notif {
+      background: none;
+      border: none;
+      color: var(--text-gray);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .notifications-header .close-notif:hover {
+      background: var(--border-color);
+      color: var(--text-dark);
+    }
+
+    .notifications-list {
+      padding: 0;
+      list-style: none;
+    }
+
+    .notification-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .notification-item:hover {
+      background: var(--bg-light);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .notification-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notification-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .notification-message {
+      font-size: 12px;
+      color: var(--text-gray);
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+
+    .notification-time {
+      font-size: 10px;
+      color: var(--text-light);
+    }
+
+    .notification-item.unread {
+      background: var(--bg-green-light);
+      border-left: 3px solid var(--primary-green);
+      padding-left: 13px;
+    }
+
+    .notifications-empty {
+      padding: 40px 16px;
+      text-align: center;
+      color: var(--text-gray);
+    }
+
+    .notifications-empty p {
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .notifications-empty-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .today-label {
+      font-size: 13px;
+      color: var(--text-gray);
+      white-space: nowrap;
+    }
+
+    .today-label span { color: var(--text-dark); font-weight: 600; }
+
+    .status-indicators {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      align-items: center;
+    }
+
+    .status-online { color: var(--primary-green); }
+    .status-sync { color: #f97316; }
+    .status-cash { font-weight: 600; color: var(--primary-green-dark); }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      padding: 12px 16px;
+      border-radius: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      border: 1px solid var(--border-color);
+      background: var(--bg-light);
+      white-space: nowrap;
+    }
+
+    .user-profile:hover {
+      background: var(--bg-green-light);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-image: url(/assets/logo.jpeg);
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .user-profile:hover .user-avatar { transform: rotate(360deg); }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-dark);
+    }
+
+    .user-role {
+      font-size: 11px;
+      opacity: 0.7;
+      color: var(--text-gray);
+    }
+
+    /* ============ DROPDOWN OVERLAY ============ */
+    .dropdown-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 999;
+    }
+
+    .dropdown-overlay.show {
+      background: rgba(0, 0, 0, 0.2);
+      opacity: 1;
+      visibility: visible;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ============ PROFILE DROPDOWN CARD ============ */
+    .profile-dropdown {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      max-width: calc(100vw - 20px);
+      background: var(--bg-white);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-2xl);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-20px) translateX(20px) scale(0.9);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10000;
+      font-family: inherit;
+      max-height: 85vh;
+      overflow-y: auto;
+      margin: 12px 20px 0 0;
+    }
+
+    .profile-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) translateX(0) scale(1);
+    }
+
+    .profile-header {
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%);
+      border-bottom: 1px solid var(--border-color);
+      border-radius: 16px 16px 0 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .profile-user-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .profile-user-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-image: url(/assets/logo.jpeg);
+      background-size: cover;
+      flex-shrink: 0;
+    }
+
+    .profile-user-text .name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .profile-user-text .role {
+      font-size: 12px;
+      color: var(--text-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .stat-card {
+      background: var(--bg-light);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .stat-card:hover {
+      background: var(--bg-green-light);
+      border-color: var(--primary-green);
+      transform: translateY(-2px);
+    }
+
+    .stat-card .value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin-bottom: 6px;
+    }
+
+    .stat-card .label {
+      font-size: 10px;
+      color: var(--text-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .profile-menu {
+      padding: 12px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .profile-menu-item {
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 13px;
+      color: var(--text-dark);
+      border-left: 3px solid transparent;
+      font-weight: 500;
+    }
+
+    .profile-menu-item:hover {
+      background: var(--bg-green-light);
+      border-left-color: var(--primary-green);
+      padding-left: 24px;
+      color: var(--primary-green-dark);
+    }
+
+    .profile-menu-item.logout-item:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-left-color: #ef4444;
+      color: #dc2626;
+    }
+
+    .profile-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 8px 0;
+    }
+
+    #closeDropdownBtn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-dark);
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      height: fit-content;
+    }
+
+    #closeDropdownBtn:hover {
+      background: var(--bg-light);
+    }
+
+    /* ============ QUICK ACTIONS ============ */
+    .quick-actions {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding: 12px;
+      background: var(--bg-light);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      flex-wrap: wrap;
+    }
+
+    .quick-btn {
+      flex: 1;
+      /* min-width: 120px; */
+      min-width: 100%;
+      padding: 10px 16px;
+      border: none;
+      background: var(--bg-white);
+      color: var(--text-dark);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+      font-weight: 500;
+      border: 1px solid var(--border-color);
+      text-align: center;
+      display: inline-block;
+    }
+
+    .quick-btn:hover {
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .quick-btn-link {
+      text-decoration: none;
+      flex: 1;
+      
+      min-width: 120px;
+    }
+
+    /* ============ CARDS ============ */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 20px 18px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--text-gray);
+      margin-bottom: 8px;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .card .value {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-dark);
+    }
+
+    .card .sub {
+      font-size: 12px;
+      color: var(--text-gray);
+    }
+
+    .card-sale { border-top: 3px solid var(--primary-green); }
+    .card-stock { border-top: 3px solid var(--secondary-blue); }
+    .card-gp { border-top: 3px solid #a855f7; }
+    .card-gst { border-top: 3px solid #f97316; }
+
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--primary-green);
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ============ SALES ANALYTICS ============ */
+    .sales-analytics {
+      margin-bottom: 24px;
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sales-analytics-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .sales-analytics-header h2 {
+      font-size: 16px;
+      margin-bottom: 4px;
+      color: var(--text-dark);
+      font-family: "Poppins", sans-serif;
+    }
+
+    .sales-analytics-subtitle {
+      font-size: 12px;
+      color: var(--text-gray);
+    }
+
+    .sales-analytics-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .time-toggle-btn {
+      border: 1px solid var(--border-color);
+      background: var(--bg-light);
+      color: var(--text-gray);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .time-toggle-btn:hover {
+      background: var(--bg-green-light);
+      color: var(--primary-green-dark);
+      border-color: var(--primary-green-light);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .time-toggle-btn.active {
+      background: linear-gradient(135deg, var(--primary-green), var(--primary-green-dark));
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: var(--shadow-md);
+    }
+
+    .sales-analytics-body {
+      position: relative;
+      width: 100%;
+      min-height: 260px;
+    }
+
+    .sales-analytics-body canvas {
+      width: 100% !important;
+      height: 260px !important;
+    }
+
+    /* ============ QUICK STATS ============ */
+    .quick-stats {
+      display: flex;
+      gap: 20px;
+      margin: 24px 0;
+      padding: 20px;
+      background: var(--bg-green-light);
+      border-radius: 16px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-gray);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-green);
+    }
+
+    /* ============ RECENT TRANSACTIONS ============ */
+    .recent-transactions {
+      margin-bottom: 24px;
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .recent-transactions h2 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: var(--text-dark);
+      font-family: "Poppins", sans-serif;
+    }
+
+    .live-badge {
+      background: var(--primary-green);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      float: right;
+    }
+
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+      transition: background 0.2s;
+      gap: 8px;
+    }
+
+    .transaction-item:hover { background: var(--bg-green-light); }
+    .transaction-item:last-child { border-bottom: none; }
+
+    .transaction-icon {
+      font-size: 18px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .transaction-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .transaction-details div {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-dark);
+    }
+
+    .transaction-amount {
+      font-weight: 600;
+      font-size: 14px;
+      white-space: nowrap;
+      color: var(--primary-green);
+      flex-shrink: 0;
+    }
+
+    /* ============ DETAILS ============ */
+    .details h2 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: var(--text-dark);
+      font-family: "Poppins", sans-serif;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .detail-box {
+      background: var(--bg-white);
+      border-radius: 14px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .detail-box h3 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-family: "Poppins", sans-serif;
+    }
+
+    #activityList {
+      list-style: none;
+      font-size: 13px;
+      color: var(--text-gray);
+      max-height: 250px;
+      overflow-y: auto;
+      margin: 0;
+      padding: 0;
+    }
+
+    #activityList li {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    #activityList li:last-child {
+      border-bottom: none;
+    }
+
+    #activityList li::before {
+      content: "✓ ";
+      color: var(--primary-green);
+      font-weight: bold;
+      margin-right: 6px;
+    }
+
+    #notesArea {
+      width: 100%;
+      min-height: 140px;
+      background: var(--bg-light);
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      color: var(--text-dark);
+      font-size: 13px;
+      padding: 12px;
+      resize: vertical;
+      font-family: "Inter", sans-serif;
+    }
+
+    /* ============ AI INSIGHTS ============ */
+    .ai-insights {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(59, 130, 246, 0.08));
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .ai-insights h3 {
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .ai-insights p {
+      color: var(--text-gray);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    /* ============ RESPONSIVE - TABLET (768px - 1024px) ============ */
+    @media (max-width: 1024px) {
+      .status-indicators { display: none; }
+      .today-label { display: none; }
+
+      .topbar-right {
+        gap: 12px;
+      }
+
+      .user-profile {
+        padding: 10px 12px;
+        gap: 10px;
+      }
+
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+      }
+
+      .user-name {
+        font-size: 12px;
+      }
+
+      .user-role {
+        font-size: 9px;
+      }
+
+      .notification-badge {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+      }
+
+      .notifications-card {
+        width: 340px;
+      }
+    }
+
+    /* ============ RESPONSIVE - MOBILE (≤ 768px) ============ */
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 240px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .sidebar.collapsed {
+        width: 240px;
+      }
+
+      .sidebar-close-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .main {
+        padding: 12px 14px;
+        margin-left: 0;
+      }
+
+      .topbar {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .topbar-title {
+        font-size: 18px;
+        order: -1;
+        width: 100%;
+      }
+
+      .topbar-left {
+        order: 0;
+        width: 100%;
+        margin-left: 0 !important;
+        gap: 8px;
+      }
+
+      .toggle-btn {
+        width: 40px;
+        height: 40px;
+      }
+
+      .search-container {
+        margin-left: 0;
+        max-width: 100%;
+        flex: 1;
+      }
+
+      .search-input {
+        padding: 8px 10px 8px 32px;
+        font-size: 13px;
+      }
+
+      .search-icon {
+        left: 10px;
+      }
+
+      .topbar-right {
+        order: 1;
+        width: 100%;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .notification-bell {
+        padding: 6px;
+        font-size: 16px;
+      }
+
+      .notification-badge {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+      }
+
+      .today-label {
+        display: flex !important;
+        font-size: 11px;
+      }
+
+      .status-indicators {
+        display: flex !important;
+        gap: 6px;
+        font-size: 10px;
+        flex: 1;
+      }
+
+      .user-profile {
+        padding: 8px 12px;
+        gap: 10px;
+        font-size: 12px;
+        flex-shrink: 1;
+        min-width: fit-content;
+      }
+
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+      }
+
+      .user-name {
+        font-size: 12px;
+      }
+
+      .user-role {
+        font-size: 10px;
+      }
+
+      .profile-dropdown {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        margin: 0;
+        transform: translateX(100%);
+        border: none;
+      }
+
+      .profile-dropdown.show {
+        transform: translateX(0);
+        border-radius: 0;
+      }
+
+      .profile-header {
+        border-radius: 0;
+        padding-top: 20px;
+      }
+
+      #closeDropdownBtn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        font-size: 28px;
+      }
+
+      .notifications-card {
+        position: fixed;
+        bottom: 0;
+        max-height: 60vh;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-stats {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .stat-item {
+        min-width: 100%;
+      }
+
+      .quick-actions {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+      }
+
+      .quick-btn-link {
+        min-width: 100%;
+      }
+
+      .quick-btn {
+        min-width: 100%;
+        padding: 10px 14px;
+        font-size: 12px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .card {
+        padding: 16px 14px;
+      }
+
+      .card h2 {
+        font-size: 11px;
+      }
+
+      .card .value {
+        font-size: 22px;
+      }
+
+      .card .sub {
+        font-size: 11px;
+      }
+
+      .sales-analytics {
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      .sales-analytics-header {
+        gap: 12px;
+      }
+
+      .sales-analytics-header h2 {
+        font-size: 14px;
+      }
+
+      .sales-analytics-subtitle {
+        font-size: 11px;
+      }
+
+      .sales-analytics-controls {
+        gap: 6px;
+      }
+
+      .time-toggle-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+      }
+
+      .sales-analytics-body {
+        min-height: 200px;
+      }
+
+      .sales-analytics-body canvas {
+        height: 200px !important;
+      }
+
+      .quick-stats {
+        padding: 16px;
+        gap: 12px;
+      }
+
+      .stat-label {
+        font-size: 11px;
+      }
+
+      .stat-value {
+        font-size: 20px;
+      }
+
+      .recent-transactions {
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      .recent-transactions h2 {
+        font-size: 14px;
+      }
+
+      .transaction-item {
+        padding: 10px 0;
+      }
+
+      .transaction-icon {
+        font-size: 16px;
+        margin-right: 8px;
+      }
+
+      .transaction-amount {
+        font-size: 13px;
+      }
+
+      .transaction-details div {
+        font-size: 12px;
+      }
+
+      .details h2 {
+        font-size: 14px;
+      }
+
+      .detail-box {
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+
+      .detail-box h3 {
+        font-size: 13px;
+      }
+
+      #activityList {
+        font-size: 12px;
+        max-height: 200px;
+      }
+
+      #activityList li {
+        padding: 6px 0;
+        font-size: 12px;
+      }
+
+      #notesArea {
+        min-height: 120px;
+        font-size: 12px;
+        padding: 10px;
+      }
+
+      .ai-insights {
+        padding: 16px;
+        margin-top: 12px;
+      }
+
+      .ai-insights h3 {
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
+
+      .ai-insights p {
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+
+      .profile-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .notifications-card {
+        position: fixed;
+        bottom: 0;
+        max-height: 50vh;
+      }
+
+      .notification-item {
+        padding: 12px 14px;
+      }
+
+      .notification-title {
+        font-size: 12px;
+      }
+
+      .notification-message {
+        font-size: 11px;
+      }
+    }
+
+    /* ============ RESPONSIVE - SMALL MOBILE (< 480px) ============ */
+    @media (max-width: 480px) {
+      .main {
+        padding: 10px 12px;
+      }
+
+      .topbar {
+        gap: 8px;
+      }
+
+      .topbar-title {
+        font-size: 16px;
+      }
+
+      .topbar-left {
+        gap: 8px;
+      }
+
+      .toggle-btn {
+        width: 38px;
+        height: 38px;
+      }
+
+      .search-container {
+        flex: 1;
+      }
+
+      .search-input {
+        padding: 6px 8px 6px 28px;
+        font-size: 12px;
+      }
+
+      .search-icon {
+        left: 8px;
+        font-size: 14px;
+      }
+
+      .topbar-right {
+        gap: 8px;
+      }
+
+      .notification-bell {
+        font-size: 14px;
+      }
+
+      .notification-badge {
+        width: 16px;
+        height: 16px;
+        font-size: 9px;
+      }
+
+      .user-profile {
+        padding: 6px 10px;
+        gap: 8px;
+      }
+
+      .user-avatar {
+        width: 32px;
+        height: 32px;
+      }
+
+      .user-name {
+        font-size: 11px;
+      }
+
+      .user-role {
+        font-size: 9px;
+      }
+
+      .status-indicators {
+        gap: 4px;
+        font-size: 9px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 14px 12px;
+      }
+
+      .card h2 {
+        font-size: 10px;
+      }
+
+      .card .value {
+        font-size: 20px;
+      }
+
+      .quick-actions {
+        gap: 8px;
+        padding: 8px;
+      }
+
+      .quick-btn {
+        padding: 8px 12px;
+        font-size: 11px;
+      }
+
+      .sales-analytics-body {
+        min-height: 180px;
+      }
+
+      .sales-analytics-body canvas {
+        height: 180px !important;
+      }
+
+      .time-toggle-btn {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
+
+      .quick-stats {
+        padding: 12px;
+      }
+
+      .stat-value {
+        font-size: 18px;
+      }
+
+      .recent-transactions {
+        padding: 12px;
+      }
+
+      .transaction-icon {
+        font-size: 14px;
+      }
+
+      .transaction-amount {
+        font-size: 12px;
+      }
+
+      .detail-box {
+        padding: 12px;
+      }
+
+      #activityList {
+        font-size: 11px;
+        max-height: 180px;
+      }
+
+      #activityList li {
+        padding: 5px 0;
+        font-size: 11px;
+      }
+
+      #notesArea {
+        min-height: 100px;
+        font-size: 11px;
+      }
+
+      .profile-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-card {
+        padding: 10px;
+      }
+
+      .stat-card .value {
+        font-size: 16px;
+      }
+
+      .stat-card .label {
+        font-size: 9px;
+      }
+
+      .profile-user-avatar {
+        width: 48px;
+        height: 48px;
+      }
+
+      .profile-user-text .name {
+        font-size: 14px;
+      }
+
+      .profile-user-text .role {
+        font-size: 11px;
+      }
+
+      .notifications-card {
+        width: 100%;
+        max-height: 45vh;
+      }
+
+      .notification-item {
+        padding: 10px 12px;
+      }
+
+      .notification-title {
+        font-size: 11px;
+      }
+
+      .notification-message {
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div style="display: flex; align-items: center;">
+          <span class="logo-text"><div class="logo-image"></div></span>
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <nav class="sidebar-menu">
+        <p class="menu-label">Core</p>
+        <button class="menu-item active" data-module="dashboard">
+          <i class="fas fa-tachometer-alt menu-icon"></i>
+          <span class="menu-text">Dashboard</span>
+        </button>
+
+        <p class="menu-label">Operations</p>
+        <a href="Billing&POS.html">
+          <button class="menu-item" data-module="billing-pos">
+            <i class="fas fa-cash-register menu-icon"></i>
+            <span class="menu-text">Billing / POS</span>
+          </button>
+        </a>
+        <a href="Inventory.html">
+          <button class="menu-item" data-module="inventory">
+            <i class="fas fa-boxes-stacked menu-icon"></i>
+            <span class="menu-text">Inventory</span>
+          </button>
+        </a>
+        <button class="menu-item" data-module="purchase">
+          <i class="fas fa-shopping-cart menu-icon"></i>
+          <span class="menu-text">Purchase</span>
+        </button>
+        <button class="menu-item" data-module="sales">
+          <i class="fas fa-receipt menu-icon"></i>
+          <span class="menu-text">Sales</span>
+        </button>
+
+        <p class="menu-label">Management</p>
+        <button class="menu-item" data-module="customers">
+          <i class="fas fa-users menu-icon"></i>
+          <span class="menu-text">Customers</span>
+        </button>
+        <button class="menu-item" data-module="suppliers">
+          <i class="fas fa-store menu-icon"></i>
+          <span class="menu-text">Suppliers</span>
+        </button>
+        <button class="menu-item" data-module="accounting">
+          <i class="fas fa-book menu-icon"></i>
+          <span class="menu-text">Accounting</span>
+        </button>
+
+        <p class="menu-label">Analytics</p>
+        <button class="menu-item" data-module="reports">
+          <i class="fas fa-chart-line menu-icon"></i>
+          <span class="menu-text">Reports</span>
+        </button>
+
+        <p class="menu-label">Admin</p>
+        <button class="menu-item" data-module="settings">
+          <i class="fas fa-cog menu-icon"></i>
+          <span class="menu-text">Settings</span>
+        </button>
+        <button class="menu-item" data-module="user-management">
+          <i class="fas fa-user-tie menu-icon"></i>
+          <span class="menu-text">User Management</span>
+        </button>
+        <button class="menu-item" data-module="alerts-notifications">
+          <i class="fas fa-bell menu-icon"></i>
+          <span class="menu-text">Alerts & Notifications</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <header class="topbar">
+        <h1 class="topbar-title" id="pageTitle">Dashboard</h1>
+
+        <div class="topbar-left">
+          <button id="sidebarToggle" class="toggle-btn" aria-label="Toggle sidebar" data-tooltip="Close Sidebar">
+            <span class="sym-icon"></span>
+          </button>
+          <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Search medicines..." id="globalSearch">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="notification-bell" id="notificationBell">
+            🔔
+            <span class="notification-badge" id="notificationCount">3</span>
+          </div>
+
+          <!-- NOTIFICATIONS CARD -->
+          <div class="notifications-card" id="notificationsCard">
+            <div class="notifications-header">
+              <h3>🔔 Notifications</h3>
+              <button class="close-notif" id="closeNotifications">✕</button>
+            </div>
+            <ul class="notifications-list" id="notificationsList">
+              <li class="notification-item unread">
+                <div class="notification-icon">⚠️</div>
+                <div class="notification-content">
+                  <div class="notification-title">Low Stock Alert</div>
+                  <div class="notification-message">Azithral 500 (8 left)</div>
+                  <div class="notification-time">2 minutes ago</div>
+                </div>
+              </li>
+              <li class="notification-item unread">
+                <div class="notification-icon">📦</div>
+                <div class="notification-content">
+                  <div class="notification-title">New Purchase Order</div>
+                  <div class="notification-message">Purchase order #PO123 received</div>
+                  <div class="notification-time">5 minutes ago</div>
+                </div>
+              </li>
+              <li class="notification-item">
+                <div class="notification-icon">💰</div>
+                <div class="notification-content">
+                  <div class="notification-title">Pending Payment</div>
+                  <div class="notification-message">Bill #B456 awaiting payment</div>
+                  <div class="notification-time">12 minutes ago</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <span class="today-label">Today: <span id="todayDate"></span></span>
+          <div class="status-indicators">
+            <span class="status-online">🟢 Online</span>
+            <span class="status-sync">🔄 Synced</span>
+            <span class="status-cash">💰 ₹45,230</span>
+          </div>
+          <div class="user-profile" id="userProfile">
+            <div class="user-avatar"></div>
+            <div class="user-info">
+              <div class="user-name">Rohit</div>
+              <div class="user-role">Admin</div>
+            </div>
+            <span style="font-size: 14px; transition: transform 0.3s;">▼</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- DROPDOWN OVERLAY -->
+      <div class="dropdown-overlay" id="dropdownOverlay"></div>
+
+      <!-- PROFILE DROPDOWN CARD -->
+      <div class="profile-dropdown" id="profileDropdown">
+        <div class="profile-header" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
+          <div style="flex: 1;">
+            <div class="profile-user-info">
+              <div class="profile-user-avatar"></div>
+              <div class="profile-user-text">
+                <div class="name">Rohit Prakash</div>
+                <div class="role">Super Admin</div>
+              </div>
+            </div>
+            <div class="profile-stats">
+              <div class="stat-card">
+                <div class="value">127</div>
+                <div class="label">Bills</div>
+              </div>
+              <div class="stat-card">
+                <div class="value">₹2.4L</div>
+                <div class="label">Revenue</div>
+              </div>
+              <div class="stat-card">
+                <div class="value">14d</div>
+                <div class="label">Streak</div>
+              </div>
+            </div>
+          </div>
+          <button id="closeDropdownBtn" aria-label="Close dropdown">✕</button>
+        </div>
+        <div class="profile-menu">
+          <div class="profile-menu-item" data-module="user-management">
+            👨‍💼 User Management
+          </div>
+          <div class="profile-menu-item" data-module="settings">
+            ⚙️ Settings
+          </div>
+          <div class="profile-divider"></div>
+          <div class="profile-menu-item">
+            📊 My Performance
+          </div>
+          <div class="profile-menu-item">
+            🔐 Change Password
+          </div>
+          <div class="profile-divider"></div>
+          <div class="profile-menu-item logout-item">
+            🚪 Logout
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS (अब anchor tag से pages linked) -->
+      <div class="quick-actions">
+        <a href="Billing&POS.html" class="quick-btn-link">
+          <span class="quick-btn">➕ New Sale</span>
+        </a>
+        <a href="AddMedicine.html" class="quick-btn-link">
+          <span class="quick-btn">💊 Add Medicine</span>
+        </a>
+        <a href="Purchase.html" class="quick-btn-link">
+          <span class="quick-btn">🛒 Add Purchase</span>
+        </a>
+        <a href="Inventory.html" class="quick-btn-link">
+          <span class="quick-btn">📦 View Stock</span>
+        </a>
+      </div>
+
+      <section class="cards">
+        <div class="card card-sale">
+          <h2>Today's Sales <span class="live-dot"></span></h2>
+          <p class="value" id="todaysSale">₹1,45,230</p>
+          <p class="sub">Total invoices generated today</p>
+        </div>
+        <div class="card card-stock">
+          <h2>Low Stock Items</h2>
+          <p class="value" id="lowStockValue">3</p>
+          <p class="sub">Items needing reorder</p>
+        </div>
+        <div class="card card-gp">
+          <h2>Near Expiry</h2>
+          <p class="value" id="nearExpiry">2</p>
+          <p class="sub">Medicines expiring soon</p>
+        </div>
+        <div class="card card-gst">
+          <h2>Total Bills</h2>
+          <p class="value" id="totalBills">127</p>
+          <p class="sub">Bills generated today</p>
+        </div>
+      </section>
+
+      <!-- Chart Section -->
+      <section class="sales-analytics">
+        <div class="sales-analytics-header">
+          <div>
+            <h2>Sales Analytics</h2>
+            <p class="sales-analytics-subtitle">Live sales trends with interactive time filters</p>
+          </div>
+          <div class="sales-analytics-controls">
+            <button class="time-toggle-btn active" data-range="day">Today</button>
+            <button class="time-toggle-btn" data-range="week">Week</button>
+            <button class="time-toggle-btn" data-range="month">Month</button>
+            <button class="time-toggle-btn" data-range="year">Year</button>
+          </div>
+        </div>
+        <div class="sales-analytics-body">
+          <canvas id="salesChart"></canvas>
+        </div>
+      </section>
+
+      <section class="quick-stats">
+        <div class="stat-item">
+          <span class="stat-label">Pending Bills</span>
+          <span class="stat-value" id="pendingBills">5</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Today's Orders</span>
+          <span class="stat-value" id="todayOrders">127</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Daily Profit</span>
+          <span class="stat-value" id="dailyProfit">₹24,500</span>
+        </div>
+      </section>
+
+      <section class="recent-transactions">
+        <h2>Recent Transactions <span class="live-badge">LIVE</span></h2>
+        <div id="transactionList"></div>
+      </section>
+
+      <section class="details">
+        <h2>Quick Overview</h2>
+        <div class="detail-grid">
+          <div class="detail-box">
+            <h3>Recent Activity</h3>
+            <ul id="activityList">
+              <li>Dashboard loaded successfully</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h3>Notes</h3>
+            <textarea id="notesArea" placeholder="Write your notes for today..."></textarea>
+          </div>
+        </div>
+        <div class="ai-insights">
+          <h3>🤖 AI Insights</h3>
+          <p><strong>Top Selling:</strong> Dolo 650 (45 sold today)</p>
+          <p><strong>Low Stock:</strong> Azithral 500 (8 left ⚠️)</p>
+          <p><strong>Trend:</strong> +12% sales vs yesterday 📈</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    let currentUser = { name: 'Rohit Kumar', role: 'Admin' };
+    let isMobileSidebarOpen = false;
+    let activityLog = [
+      '✓ Dashboard loaded successfully'
+    ];
+
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("sidebarToggle");
+    const pageTitle = document.getElementById("pageTitle");
+    const notificationBell = document.getElementById("notificationBell");
+    const notificationsCard = document.getElementById("notificationsCard");
+    const closeNotifications = document.getElementById("closeNotifications");
+    const userProfile = document.getElementById("userProfile");
+    const profileDropdown = document.getElementById("profileDropdown");
+    const dropdownOverlay = document.getElementById("dropdownOverlay");
+    const globalSearch = document.getElementById("globalSearch");
+    const transactionList = document.getElementById("transactionList");
+    const activityList = document.getElementById("activityList");
+
+    const modules = {
+      dashboard: { title: 'Dashboard', icon: '📊' },
+      'billing-pos': { title: 'Billing / POS', icon: '💰' },
+      inventory: { title: 'Inventory', icon: '📦' },
+      purchase: { title: 'Purchase', icon: '🛒' },
+      sales: { title: 'Sales', icon: '🧾' },
+      customers: { title: 'Customers', icon: '👥' },
+      suppliers: { title: 'Suppliers', icon: '🏪' },
+      accounting: { title: 'Accounting', icon: '📚' },
+      reports: { title: 'Reports', icon: '📈' },
+      settings: { title: 'Settings', icon: '⚙️' },
+      'user-management': { title: 'User Management', icon: '👨‍💼' }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateDate();
+      loadTransactions();
+      updateDashboardStats();
+      setupEventListeners();
+      setupSalesChartControls();
+      createSalesChart('day');
+      displayActivityLog();
+      setInterval(updateDashboardStats, 5000);
+    });
+
+    function setupEventListeners() {
+      toggleBtn.addEventListener("click", toggleSidebar);
+
+      // Sidebar menu items: Dashboard पर ही navigation, बाकी सिर्फ activity
+      const menuItems = document.querySelectorAll('.menu-item[data-module]');
+      menuItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          const module = item.dataset.module;
+
+          // अगर anchor के अंदर button है (Billing/Inventory), तो default navigation होने दें
+          const isInsideLink = item.closest('a') !== null;
+          if (isInsideLink && module !== 'dashboard') {
+            addActivity(`Navigated using quick link: ${modules[module]?.title || module}`);
+            return;
+          }
+
+          e.preventDefault();
+
+          if (module !== 'dashboard') {
+            addActivity(`Clicked on ${modules[module]?.title || module}`);
+            closeMobileSidebar();
+            closeProfileDropdown();
+          } else {
+            navigateToModule(module, item);
+          }
+        });
+      });
+
+      // Profile menu items
+      document.querySelectorAll('.profile-menu-item[data-module]').forEach(item => {
+        item.addEventListener('click', (e) => {
+          const module = item.dataset.module;
+          navigateToModule(module, item);
+        });
+      });
+
+      globalSearch.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') performGlobalSearch(globalSearch.value);
+      });
+
+      notificationBell.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleNotificationsCard();
+      });
+
+      closeNotifications.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeNotificationsCard();
+      });
+
+      userProfile.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = profileDropdown.classList.contains('show');
+        if (!isOpen) openProfileDropdown();
+        else closeProfileDropdown();
+      });
+
+      dropdownOverlay.addEventListener('click', closeProfileDropdown);
+
+      document.addEventListener('click', (e) => {
+        if (!userProfile.contains(e.target) && !profileDropdown.contains(e.target)) {
+          closeProfileDropdown();
+        }
+        if (!notificationBell.contains(e.target) && !notificationsCard.contains(e.target)) {
+          closeNotificationsCard();
+        }
+      });
+
+      document.getElementById('closeDropdownBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeProfileDropdown();
+      });
+
+      document.querySelector('.logout-item').addEventListener('click', logout);
+
+      document.getElementById('notesArea').addEventListener('input', function() {
+        localStorage.setItem('notes', this.value);
+      });
+
+      document.getElementById('sidebarCloseBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeMobileSidebar();
+      });
+    }
+
+    function toggleNotificationsCard() {
+      if (notificationsCard.classList.contains('show')) {
+        closeNotificationsCard();
+      } else {
+        openNotificationsCard();
+      }
+    }
+
+    function openNotificationsCard() {
+      notificationsCard.classList.add('show');
+      addActivity('Viewed notifications');
+    }
+
+    function closeNotificationsCard() {
+      notificationsCard.classList.remove('show');
+    }
+
+    function openProfileDropdown() {
+      profileDropdown.classList.add('show');
+      dropdownOverlay.classList.add('show');
+      addActivity('Profile menu opened');
+    }
+
+    function closeProfileDropdown() {
+      profileDropdown.classList.remove('show');
+      dropdownOverlay.classList.remove('show');
+    }
+
+    function toggleSidebar() {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.toggle('active');
+        isMobileSidebarOpen = sidebar.classList.contains('active');
+      } else {
+        sidebar.classList.toggle('collapsed');
+        toggleBtn.dataset.tooltip = sidebar.classList.contains('collapsed') ? 'Open Sidebar' : 'Close Sidebar';
+      }
+      addActivity('Sidebar toggled');
+    }
+
+    function closeMobileSidebar() {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+        isMobileSidebarOpen = false;
+      }
+    }
+
+    function navigateToModule(moduleName, activeBtn) {
+      closeMobileSidebar();
+      closeProfileDropdown();
+      document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
+      if (activeBtn && activeBtn.closest('.sidebar')) activeBtn.classList.add('active');
+      const module = modules[moduleName];
+      if (module) {
+        pageTitle.textContent = module.title;
+        addActivity(`Navigated to ${module.title}`);
+      }
+    }
+
+    function performGlobalSearch(query) {
+      addActivity(`Searched for: ${query}`);
+      alert(`Searching for: ${query}`);
+    }
+
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        addActivity('User logged out');
+        localStorage.clear();
+        window.location.href = 'login.html';
+      }
+    }
+
+    function updateDate() {
+      document.getElementById("todayDate").textContent = new Date().toLocaleDateString("en-IN", {
+        day: "2-digit", month: "short", year: "numeric"
+      });
+    }
+
+    function updateDashboardStats() {
+      document.getElementById("todaysSale").textContent = `₹${Math.floor(Math.random() * 50000) + 100000}`;
+      document.getElementById("lowStockValue").textContent = Math.floor(Math.random() * 5) + 1;
+      document.getElementById("nearExpiry").textContent = Math.floor(Math.random() * 3) + 1;
+      document.getElementById("totalBills").textContent = Math.floor(Math.random() * 50) + 100;
+      document.getElementById("pendingBills").textContent = Math.floor(Math.random() * 3) + 1;
+      document.getElementById("todayOrders").textContent = Math.floor(Math.random() * 30) + 100;
+      document.getElementById("dailyProfit").textContent = `₹${Math.floor(Math.random() * 10000) + 20000}`;
+      document.querySelector('.status-cash').innerHTML = `💰 ₹${Math.floor(Math.random() * 10000) + 40000}`;
+    }
+
+    function loadTransactions() {
+      const transactions = [
+        { icon: '💊', name: 'Dolo 650 x 20', time: '2 min ago', amount: '₹650' },
+        { icon: '💉', name: 'Azithral 500 x 10', time: '5 min ago', amount: '₹450' },
+        { icon: '🩺', name: 'Moxikind CV', time: '12 min ago', amount: '₹320' },
+        { icon: '🧬', name: 'Insulin 10ml', time: '25 min ago', amount: '₹180' }
+      ];
+      transactionList.innerHTML = transactions.map(t => `
+        <div class="transaction-item">
+          <div style="display: flex; align-items: center;">
+            <span class="transaction-icon">${t.icon}</span>
+            <div class="transaction-details">
+              <div>${t.name}</div>
+              <div style="font-size: 12px; opacity: 0.7;">${t.time}</div>
+            </div>
+          </div>
+          <div class="transaction-amount">${t.amount}</div>
+        </div>
+      `).join('');
+    }
+
+    function addActivity(message) {
+      activityLog.unshift(message);
+      if (activityLog.length > 10) activityLog.pop();
+      displayActivityLog();
+    }
+
+    function displayActivityLog() {
+      activityList.innerHTML = activityLog.map(a => `<li>${a}</li>`).join('');
+    }
+
+    let salesChart;
+    let currentRange = 'day';
+    const salesData = {
+      day: { labels: ['9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM'], values: [12, 18, 22, 28, 25, 30, 34, 32, 29] },
+      week: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], values: [120, 150, 180, 160, 190, 210, 175] },
+      month: { labels: ['W1', 'W2', 'W3', 'W4'], values: [520, 610, 580, 640] },
+      year: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], values: [3200, 3400, 3100, 3600, 3800, 4000, 4200, 4500, 4300, 4700, 4900, 5100] }
+    };
+
+    function getRandomizedValues(baseValues) {
+      return baseValues.map(v => Math.floor(v + Math.random() * 50 - 25));
+    }
+
+    function createSalesChart(rangeKey = 'day') {
+      const ctx = document.getElementById('salesChart');
+      if (!ctx) return;
+      document.querySelectorAll('.time-toggle-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.querySelector(`.time-toggle-btn[data-range="${rangeKey}"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const data = {
+        labels: salesData[rangeKey].labels,
+        datasets: [{
+          label: 'Sales',
+          data: getRandomizedValues(salesData[rangeKey].values),
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.12)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 5,
+          pointBackgroundColor: '#10b981',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2
+        }]
+      };
+
+      const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 700 },
+        plugins: { legend: { display: false } },
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 11 } } },
+          y: { beginAtZero: true, grid: { color: 'rgba(148, 163, 184, 0.25)' }, ticks: { color: '#64748b', font: { size: 11 } } }
+        }
+      };
+
+      if (salesChart) salesChart.destroy();
+      salesChart = new Chart(ctx, { type: 'line', data, options });
+    }
+
+    function updateSalesChart(rangeKey) {
+      if (!salesChart) return;
+      salesChart.data.labels = salesData[rangeKey].labels;
+      salesChart.data.datasets[0].data = getRandomizedValues(salesData[rangeKey].values);
+      salesChart.update();
+    }
+
+    function setupSalesChartControls() {
+      const buttons = document.querySelectorAll('.time-toggle-btn');
+      if (!buttons.length) return;
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const range = btn.dataset.range;
+          if (!range) return;
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          updateSalesChart(range);
+          currentRange = range;
+        });
+      });
+    }
+  </script>
+</body>
+</html>
